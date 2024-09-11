@@ -9,11 +9,12 @@ import java.util.Objects;
 public class Bug {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bug_id_seq")
+    @SequenceGenerator(name = "bug_id_seq", sequenceName = "bugzapperj.seq_bug_id_gen", allocationSize = 1)
     @Column(name = "id")
     private int id;
 
-    @Column(name = "name")
+    @Column(name = "name", columnDefinition = "TEXT", length = 75)
     private String name;
 
     @Column(name = "type")
@@ -22,7 +23,7 @@ public class Bug {
     @Column(name = "priority")
     private int priority;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT", length = 250)
     private String description;
 
     @Column(name = "status")
@@ -39,17 +40,15 @@ public class Bug {
         this.description = description;
     }
 
-    public Bug(String name, int type, int priority, String description, int reporterId, int assigneeId, int bugStatus) {
-        this.name = name;
-        this.type = type;
-        this.priority = priority;
-        this.description = description;
-        this.reporterId = reporterId;
-        this.assigneeId = assigneeId;
-        this.bugStatus = bugStatus;
-    }
-
     public Bug() {
+        // Default constructor
+        this.name = "";
+        this.description = "";
+        this.type = 0;
+        this.priority = 0;
+        this.bugStatus = 0;
+        this.reporterId = 0;
+        this.assigneeId = 0;
     }
 
     public int getId() {

@@ -37,6 +37,8 @@ public class BugServiceImpl implements BugService {
     public Bug createBug(Bug bug) throws BugAlreadyExistsException, NullBugDataException {
         if (bug == null) {
             throw new NullBugDataException("Invalid bug data, bug object is required");
+        } else if (bug.getId() < 1) {
+            throw new NullBugDataException("Invalid bug data, id is invalid");
         } else if (bug.getName() == null || bug.getName().isBlank()) {
             throw new NullBugDataException("Invalid bug data, name is required");
         } else if (bug.getDescription() == null || bug.getDescription().isBlank()) {
@@ -53,6 +55,7 @@ public class BugServiceImpl implements BugService {
             throw new InvalidBugIdException("Invalid bug id");
         } else if (bugRepository.existsById(id)) {
             bugRepository.deleteById(id);
+            return;
         }
         throw new BugNotFoundException("Bug not found");
     }
