@@ -91,14 +91,14 @@ public class Bug {
     @Override
     public String toString() {
         return "Bug{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", type=" + type +
-                ", priority=" + priority +
-                ", bugStatus=" + bugStatus +
-                ", reporterId=" + reporterId +
-                ", assigneeId=" + assigneeId +
+                "name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", id=" + getId() +
+                ", type=" + getType() +
+                ", priority=" + getPriority() +
+                ", bugStatus=" + getBugStatus() +
+                ", reporterId=" + getReporterId() +
+                ", assigneeId=" + getAssigneeId() +
                 '}';
     }
 
