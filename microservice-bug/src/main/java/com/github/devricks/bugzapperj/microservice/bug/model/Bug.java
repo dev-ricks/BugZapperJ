@@ -1,20 +1,23 @@
 package com.github.devricks.bugzapperj.microservice.bug.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "bug", schema = "bugzapperj")
-public class Bug {
+public class Bug implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bug_id_seq")
     @SequenceGenerator(name = "bug_id_seq", sequenceName = "bugzapperj.seq_bug_id_gen", allocationSize = 1)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     private int id;
 
-    @Column(name = "name", columnDefinition = "TEXT", length = 75)
+    @Column(name = "name", columnDefinition = "TEXT", length = 75, nullable = false)
+    @NotBlank(message = "Name is required")
     private String name;
 
     @Column(name = "type")
@@ -23,7 +26,8 @@ public class Bug {
     @Column(name = "priority")
     private int priority;
 
-    @Column(name = "description", columnDefinition = "TEXT", length = 250)
+    @Column(name = "description", columnDefinition = "TEXT", length = 250, nullable = false)
+    @NotBlank(message = "Description is required")
     private String description;
 
     @Column(name = "status")
@@ -63,28 +67,56 @@ public class Bug {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getType() {
         return type;
+    }
+
+    public void setType(int i) {
+        this.type = i;
     }
 
     public int getPriority() {
         return priority;
     }
 
+    public void setPriority(int i) {
+        this.priority = i;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getAssigneeId() {
         return assigneeId;
     }
 
+    public void setAssigneeId(int i) {
+        this.assigneeId = i;
+    }
+
     public int getReporterId() {
         return reporterId;
     }
 
+    public void setReporterId(int i) {
+        this.reporterId = i;
+    }
+
     public int getBugStatus() {
         return bugStatus;
+    }
+
+    public void setBugStatus(int i) {
+        this.bugStatus = i;
     }
 
     @Override
@@ -121,6 +153,4 @@ public class Bug {
     public int hashCode() {
         return Objects.hash(name, description, id, type, priority, bugStatus, reporterId, assigneeId);
     }
-
-
 }

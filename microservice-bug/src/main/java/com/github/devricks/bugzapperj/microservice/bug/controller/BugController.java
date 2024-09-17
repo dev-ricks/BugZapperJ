@@ -8,6 +8,7 @@ import com.github.devricks.bugzapperj.microservice.bug.model.Bug;
 import com.github.devricks.bugzapperj.microservice.bug.service.BugService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -19,11 +20,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/bug-microservice")
+@Controller
 public class BugController {
 
     private final BugService bugService;
 
-    public BugController(BugService bugService) {
+    BugController(BugService bugService) {
         this.bugService = bugService;
     }
 

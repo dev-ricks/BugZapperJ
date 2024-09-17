@@ -6,22 +6,40 @@ import com.github.devricks.bugzapperj.microservice.bug.exception.InvalidBugIdExc
 import com.github.devricks.bugzapperj.microservice.bug.exception.NullBugDataException;
 import com.github.devricks.bugzapperj.microservice.bug.model.Bug;
 import com.github.devricks.bugzapperj.microservice.bug.repository.BugRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class BugServiceImpl implements BugService {
 
-    @Autowired
-    private BugRepository bugRepository;
+    private final BugRepository bugRepository;
+
+    public BugServiceImpl(BugRepository bugRepository) {
+        this.bugRepository = bugRepository;
+    }
+
+    @Override
+    public Bug getBugById(Integer integer) throws BugNotFoundException, InvalidBugIdException {
+        if (integer == null) {
+            throw new InvalidBugIdException("Invalid bug id, cannot be null");
+        }
+        return getBugById(integer.intValue());
+    }
 
     @Override
     public Bug getBugById(int id) throws BugNotFoundException, InvalidBugIdException {
         if (id < 1) {
             throw new InvalidBugIdException("Invalid bug id");
         }
-        Optional<Bug> bug = bugRepository.findById(id);
+        Optional<Bug> bug;
+        try {
+            bug = bugRepository.findById(id);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidBugIdException("Invalid argument for bug id, either null or empty");
+        }
+
         if (bug.isPresent()) {
             return bug.get();
         }
@@ -64,6 +82,8 @@ public class BugServiceImpl implements BugService {
     public Bug updateBug(Bug bug) throws BugNotFoundException, NullBugDataException {
         if (bug == null) {
             throw new NullBugDataException("Invalid bug data, bug object is required");
+        } else if (bug.getId() < 1) {
+            throw new NullBugDataException("Invalid bug data, id is invalid");
         } else if (bug.getName() == null || bug.getName().isBlank()) {
             throw new NullBugDataException("Invalid bug data, name is required");
         } else if (bug.getDescription() == null || bug.getDescription().isBlank()) {
