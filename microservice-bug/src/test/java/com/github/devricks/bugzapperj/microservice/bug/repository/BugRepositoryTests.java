@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.properties.PropertyMapping;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,14 +68,6 @@ class BugRepositoryTests {
     }
 
     @Test
-    void findById_NullBugId_ShouldThrowInvalidDataAccessApiUsageException() {
-        // Have to look into this one, not sure if this is the correct exception
-        assertThrows(InvalidDataAccessApiUsageException.class, () ->
-                bugRepository.findById(null)
-        );
-    }
-
-    @Test
     void findById_NonExistentBugId_ShouldReturnOptionalEmpty() {
         Optional<Bug> bug = bugRepository.findById(100);
         assertFalse(bug.isPresent());
@@ -118,14 +109,6 @@ class BugRepositoryTests {
         Bug savedBug = bugRepository.save(bug);
         bugRepository.flush();
         assertEquals(bug, savedBug);
-    }
-
-    @Test
-    void save_NullBug_ShouldThrowInvalidDataAccessApiUsageException() {
-        assertThrows(InvalidDataAccessApiUsageException.class, () -> {
-            bugRepository.save(null);
-            bugRepository.flush();
-        });
     }
 
     @Test

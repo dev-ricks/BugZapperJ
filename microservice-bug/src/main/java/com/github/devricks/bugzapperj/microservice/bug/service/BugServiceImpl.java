@@ -21,14 +21,6 @@ public class BugServiceImpl implements BugService {
     }
 
     @Override
-    public Bug getBugById(Integer integer) throws BugNotFoundException, InvalidBugIdException {
-        if (integer == null) {
-            throw new InvalidBugIdException("Invalid bug id, cannot be null");
-        }
-        return getBugById(integer.intValue());
-    }
-
-    @Override
     public Bug getBugById(int id) throws BugNotFoundException, InvalidBugIdException {
         if (id < 1) {
             throw new InvalidBugIdException("Invalid bug id");

@@ -18,8 +18,6 @@ public interface BugService {
 
     void deleteBug(int id) throws BugNotFoundException, InvalidBugIdException;
 
-    Bug getBugById(Integer integer) throws BugNotFoundException, InvalidBugIdException;
-
     Bug getBugById(int id) throws BugNotFoundException, InvalidBugIdException;
 
     List<Bug> getAllBugs();
