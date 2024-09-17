@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @PropertySource("classpath:application.properties")
 public class BugServiceConfiguration {
 
-    private BugRepository bugRepository;
+    BugRepository bugRepository;
 
     @Bean(name = "bugService")
     public BugService bugService() {

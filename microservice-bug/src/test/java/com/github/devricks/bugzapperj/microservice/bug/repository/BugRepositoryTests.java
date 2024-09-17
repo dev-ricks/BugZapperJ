@@ -24,7 +24,6 @@ class BugRepositoryTests {
     private final BugRepository bugRepository;
 
     private Bug testBug;
-    private List<Bug> testBugs;
 
     @Autowired
     public BugRepositoryTests(BugRepository bugRepository) {
@@ -34,7 +33,7 @@ class BugRepositoryTests {
     @BeforeEach
     void setUp() {
         testBug = new Bug("Test Bug", "This is a test bug.");
-        testBugs = List.of(new Bug("Test Bug 1", "This is a test bug 1."), new Bug("Test Bug 2", "This is a test bug 2."));
+        List<Bug> testBugs = List.of(new Bug("Test Bug 1", "This is a test bug 1."), new Bug("Test Bug 2", "This is a test bug 2."));
         bugRepository.save(testBug);
         bugRepository.saveAll(testBugs);
         bugRepository.flush();
@@ -141,17 +140,13 @@ class BugRepositoryTests {
     @Test
     void save_NullBugName_ShouldThrowDataConstraintViolationException() {
         Bug bug = new Bug(null, "This is a test bug 3.");
-        assertThrows(ConstraintViolationException.class, () -> {
-            bugRepository.saveAndFlush(bug);
-        });
+        assertThrows(ConstraintViolationException.class, () -> bugRepository.saveAndFlush(bug));
     }
 
     @Test
     void save_EmptyBugName_ShouldThrowInvalidConstraintViolationException() {
         Bug bug = new Bug("", "This is a test bug 3.");
-        assertThrows(ConstraintViolationException.class, () -> {
-            bugRepository.saveAndFlush(bug);
-        });
+        assertThrows(ConstraintViolationException.class, () -> bugRepository.saveAndFlush(bug));
     }
 
     @Test
@@ -175,9 +170,7 @@ class BugRepositoryTests {
     @Test
     void save_EmptyBugNameAndDescription_ShouldThrowInvalidDataConstraintViolationException() {
         Bug bug = new Bug("", "");
-        assertThrows(ConstraintViolationException.class, () -> {
-            bugRepository.saveAndFlush(bug);
-        });
+        assertThrows(ConstraintViolationException.class, () -> bugRepository.saveAndFlush(bug));
     }
 
     @Test
