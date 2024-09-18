@@ -1,2 +1,2 @@
 # BugZapperJ
-Demo of microservices using Java language.
+Demonstration of microservices using Java language and Spring Framework.
