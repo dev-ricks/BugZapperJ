@@ -6,6 +6,7 @@ import com.github.devricks.bugzapperj.microservice.bug.exception.InvalidBugIdExc
 import com.github.devricks.bugzapperj.microservice.bug.exception.NullBugDataException;
 import com.github.devricks.bugzapperj.microservice.bug.model.Bug;
 import com.github.devricks.bugzapperj.microservice.bug.service.BugService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class BugController {
 
     private final BugService bugService;
 
+    @Autowired
     BugController(BugService bugService) {
         this.bugService = bugService;
     }

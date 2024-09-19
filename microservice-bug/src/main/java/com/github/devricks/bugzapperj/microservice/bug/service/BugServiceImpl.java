@@ -6,6 +6,7 @@ import com.github.devricks.bugzapperj.microservice.bug.exception.InvalidBugIdExc
 import com.github.devricks.bugzapperj.microservice.bug.exception.NullBugDataException;
 import com.github.devricks.bugzapperj.microservice.bug.model.Bug;
 import com.github.devricks.bugzapperj.microservice.bug.repository.BugRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class BugServiceImpl implements BugService {
 
     private final BugRepository bugRepository;
 
+    @Autowired
     public BugServiceImpl(BugRepository bugRepository) {
         this.bugRepository = bugRepository;
     }

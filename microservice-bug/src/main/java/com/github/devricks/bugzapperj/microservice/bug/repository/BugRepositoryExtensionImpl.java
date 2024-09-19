@@ -23,7 +23,7 @@ public class BugRepositoryExtensionImpl<T> implements BugRepositoryExtension<T> 
         this.entityManager = context.getEntityManagerByManagedType(Bug.class);
     }
 
-    public <S extends T> S duplicateNotAllowedToSave(S entity) throws NotABugEntityException, InvalidBugIdException {
+    public <S extends T> S duplicateNotAllowedToSave(S entity) throws BugAlreadyExistsException, NotABugEntityException, InvalidBugIdException {
         if (!(entity instanceof Bug bug)) {
             throw new NotABugEntityException("Entity is not a Bug");
         }
