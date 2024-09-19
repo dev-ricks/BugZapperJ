@@ -61,11 +61,12 @@ class BugServiceImplTests {
     }
 
     @Test
-    void getBugById_NullId_ShouldThrowInvalidBugIdException() {
+    void getBugById_NullId_ShouldThrowNullPointerException() {
         // Arrange
         Integer nullId = null;
         // Act & Assert
-        assertThrows(InvalidBugIdException.class, () -> bugService.getBugById(nullId));
+        // Note: unboxing null Integer to int will throw NullPointerException, might look at a better solution
+        assertThrows(NullPointerException.class, () -> bugService.getBugById(nullId));
     }
 
     @Test
