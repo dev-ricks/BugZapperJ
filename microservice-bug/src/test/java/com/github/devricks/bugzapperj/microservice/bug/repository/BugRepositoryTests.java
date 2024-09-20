@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @PropertyMapping("spring")
-@DataJpaTest
+@DataJpaTest(showSql = false)
 class BugRepositoryTests {
 
     private final BugRepository bugRepository;
