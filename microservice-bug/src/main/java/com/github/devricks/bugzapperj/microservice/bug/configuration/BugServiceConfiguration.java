@@ -11,8 +11,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@ConfigurationProperties(prefix = "spring")
 @EnableJpaRepositories(basePackages = "com.github.devricks.bugzapperj.microservice.bug.repository")
+@ConfigurationProperties(prefix = "spring")
 @PropertySource("classpath:application.properties")
 public class BugServiceConfiguration {
 
