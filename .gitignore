@@ -1,4 +1,5 @@
-HELP.md
+### MAVEN ###
+.maven/
 target/
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
