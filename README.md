@@ -8,11 +8,15 @@ database.
 
 A client application is under construction that will use the RESTful API to interact with the server. This client will
 be react.js based.
+## Future Plans
+- Work on architecture documentation
+- Create a client application using React.js
+- Code the remaining microservices
+- Refactor to remove the dependencies on the Spring Framework
+- Create a client application using Angular
 
 ## Getting Started
-
 ### Microservice Bug
-
 Install Git<br/>
 https://git-scm.com/book/en/v2/Getting-Started-Installing-Git<br/>
 
