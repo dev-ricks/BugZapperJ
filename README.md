@@ -11,6 +11,7 @@ be react.js based.
 ## Future Plans
 - Work on architecture documentation
 - Create a client application using React.js
+- Add full RESTful definitions level2 to the microservices
 - Code the remaining microservices
 - Refactor microservices to remove the dependencies on the Spring Framework
 - Create a client application using Angular
