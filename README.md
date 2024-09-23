@@ -12,8 +12,9 @@ be react.js based.
 - Work on architecture documentation
 - Create a client application using React.js
 - Code the remaining microservices
-- Refactor to remove the dependencies on the Spring Framework
+- Refactor microservices to remove the dependencies on the Spring Framework
 - Create a client application using Angular
+- Do a performance evaluation of the code
 
 ## Getting Started
 ### Microservice Bug
