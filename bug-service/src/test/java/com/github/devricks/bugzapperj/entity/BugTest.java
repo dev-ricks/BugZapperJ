@@ -1,11 +1,9 @@
 package com.github.devricks.bugzapperj.entity;
 
 import com.github.devricks.bugzapperj.entity.exception.ValidationException;
-import com.github.devricks.bugzapperj.entity.util.IDGenerator;
+import com.github.devricks.bugzapperj.entity.util.DefaultIDGeneratorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,13 +20,13 @@ class BugTest {
         String expectedName = "bug";
         String expectedDescription = "description";
         Project project = new Project.Builder()
-                .setName("project")
+                .withName("project")
                 .build();
         // Act
         Bug componentToTest = new Bug.Builder()
-                .setName(expectedName)
-                .setDescription(expectedDescription)
-                .setProject(project)
+                .withName(expectedName)
+                .withDescription(expectedDescription)
+                .withProject(project)
                 .build();
         // Assert
         assertNotNull(componentToTest);
@@ -40,11 +38,10 @@ class BugTest {
     @Test
     void BugCreate_WhenNamePropertyIsSet_ShouldCreateBugWithAppropriateValues() {
         // Arrange
-        int expectedID = 1;
         String expectedName = "bug";
         // Act
         Bug componentToTest = new Bug.Builder()
-                .setName(expectedName)
+                .withName(expectedName)
                 .build();
         // Assert
         assertNotNull(componentToTest);
@@ -57,7 +54,7 @@ class BugTest {
         String expectedDescription = "description";
         // Act
         Bug componentToTest = new Bug.Builder()
-                .setDescription(expectedDescription)
+                .withDescription(expectedDescription)
                 .build();
         // Assert
         assertNotNull(componentToTest);
@@ -68,11 +65,11 @@ class BugTest {
     void BugCreate_WhenProjectPropertyIsSet_ShouldCreateBugWithAppropriateValues() {
         // Arrange
         Project project = new Project.Builder()
-                .setName("project")
+                .withName("project")
                 .build();
         // Act
         Bug componentToTest = new Bug.Builder()
-                .setProject(project)
+                .withProject(project)
                 .build();
         // Assert
         assertNotNull(componentToTest);
@@ -84,10 +81,10 @@ class BugTest {
         // Arrange
         int expectedID = 0;
         Bug bugComponentToTest = new Bug.Builder()
-                .setName("bug")
-                .setDescription("description")
-                .setProject(new Project.Builder()
-                        .setName("project")
+                .withName("bug")
+                .withDescription("description")
+                .withProject(new Project.Builder()
+                        .withName("project")
                         .build())
                 .build();
         // Act
@@ -101,7 +98,7 @@ class BugTest {
         // Arrange
         String expectedName = "bug";
         Bug bugComponentToTest = new Bug.Builder()
-                .setName(expectedName)
+                .withName(expectedName)
                 .build();
         // Act
         String actualName = bugComponentToTest.getName();
@@ -114,7 +111,7 @@ class BugTest {
         // Arrange
         String expectedDescription = "description";
         Bug bugComponentToTest = new Bug.Builder()
-                .setDescription(expectedDescription)
+                .withDescription(expectedDescription)
                 .build();
         // Act
         String actualDescription = bugComponentToTest.getDescription();
@@ -126,10 +123,10 @@ class BugTest {
     void getProject_CreateBugWithProject_BugShouldHaveSameProject() {
         // Arrange
         Project expectedProject = new Project.Builder()
-                .setName("project")
+                .withName("project")
                 .build();
         Bug bugComponentToTest = new Bug.Builder()
-                .setProject(expectedProject)
+                .withProject(expectedProject)
                 .build();
         // Act
         Project actualProject = bugComponentToTest.getProject();
@@ -143,10 +140,10 @@ class BugTest {
         String bugName = null;
         int expectedErrorMessages = 1;
         Bug bugComponentToTest = new Bug.Builder()
-                .setName(bugName)
-                .setDescription("description")
-                .setProject(new Project.Builder()
-                        .setName("project")
+                .withName(bugName)
+                .withDescription("description")
+                .withProject(new Project.Builder()
+                        .withName("project")
                         .build())
                 .build();
         // Act // Assert
@@ -160,10 +157,10 @@ class BugTest {
         String bugName = "";
         int expectedErrorMessages = 1;
         Bug bugComponentToTest = new Bug.Builder()
-                .setName(bugName)
-                .setDescription("description")
-                .setProject(new Project.Builder()
-                        .setName("project")
+                .withName(bugName)
+                .withDescription("description")
+                .withProject(new Project.Builder()
+                        .withName("project")
                         .build())
                 .build();
         // Act // Assert
@@ -177,10 +174,10 @@ class BugTest {
         String bugDescription = null;
         int expectedErrorMessages = 1;
         Bug bugComponentToTest = new Bug.Builder()
-                .setName("bug")
-                .setDescription(bugDescription)
-                .setProject(new Project.Builder()
-                        .setName("project")
+                .withName("bug")
+                .withDescription(bugDescription)
+                .withProject(new Project.Builder()
+                        .withName("project")
                         .build())
                 .build();
         // Act // Assert
@@ -194,10 +191,10 @@ class BugTest {
         String bugDescription = "";
         int expectedErrorMessages = 1;
         Bug bugComponentToTest = new Bug.Builder()
-                .setName("bug")
-                .setDescription(bugDescription)
-                .setProject(new Project.Builder()
-                        .setName("project")
+                .withName("bug")
+                .withDescription(bugDescription)
+                .withProject(new Project.Builder()
+                        .withName("project")
                         .build())
                 .build();
         // Act
@@ -212,9 +209,9 @@ class BugTest {
         Project bugProject = null;
         int expectedErrorMessages = 1;
         Bug bugComponentToTest = new Bug.Builder()
-                .setName("bug")
-                .setDescription("description")
-                .setProject(bugProject)
+                .withName("bug")
+                .withDescription("description")
+                .withProject(bugProject)
                 .build();
         // Act // Assert
         ValidationException exception = assertThrows(ValidationException.class, bugComponentToTest::validate);
@@ -229,9 +226,9 @@ class BugTest {
         Project bugProject = null;
         int expectedErrorMessages = 3;
         Bug bugComponentToTest = new Bug.Builder()
-                .setName(bugName)
-                .setDescription(bugDescription)
-                .setProject(bugProject)
+                .withName(bugName)
+                .withDescription(bugDescription)
+                .withProject(bugProject)
                 .build();
         // Act // Assert
         ValidationException exception = assertThrows(ValidationException.class, bugComponentToTest::validate);
@@ -241,19 +238,12 @@ class BugTest {
     @Test
     void resetIDGenerator_IDStartsAtHundredThousand_IDGeneratorShouldBeSetAtZeroAgain() {
         // Arrange
-        Bug bugComponentToTest = new Bug.Builder()
-                .setName("bug")
-                .setDescription("description")
-                .setProject(new Project.Builder()
-                        .setName("project")
-                        .build())
-                .build();
-        Bug.IDGeneratorBug = new IDGenerator(new AtomicInteger(100000));
+        Bug.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(100000);
         int expectedID = 0;
         // Act
         Bug.resetIDGenerator();
         // Assert
-        assertEquals(expectedID, Bug.IDGeneratorBug.getCurrentID());
+        assertEquals(expectedID, Bug.IDGenerator.getCurrentID());
     }
 
     @Test
@@ -261,10 +251,10 @@ class BugTest {
         // Arrange
         int expectedID = 1;
         Bug bugComponentToTest = new Bug.Builder()
-                .setName("bug")
-                .setDescription("description")
-                .setProject(new Project.Builder()
-                        .setName("project")
+                .withName("bug")
+                .withDescription("description")
+                .withProject(new Project.Builder()
+                        .withName("project")
                         .build())
                 .build();
         // Act

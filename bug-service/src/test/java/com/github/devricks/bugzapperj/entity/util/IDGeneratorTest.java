@@ -3,13 +3,11 @@ package com.github.devricks.bugzapperj.entity.util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IDGeneratorTest {
 
-    IDGenerator componentToTest = new IDGenerator();
+    IDGenerator componentToTest = new DefaultIDGeneratorFactory().createIDGenerator();
 
     @BeforeEach
     void setUp() {
@@ -21,7 +19,7 @@ class IDGeneratorTest {
         // Arrange
         int expectedID = 0;
         // Act
-        componentToTest = new IDGenerator();
+        componentToTest = new DefaultIDGeneratorFactory().createIDGenerator();
         int actualID = componentToTest.getCurrentID();
         // Assert
         assertEquals(expectedID, actualID);
@@ -32,7 +30,7 @@ class IDGeneratorTest {
         // Arrange
         int expectedID = 1;
         // Act
-        componentToTest = new IDGenerator(new AtomicInteger(1));
+        componentToTest = new DefaultIDGeneratorFactory().createIDGenerator(1);
         int actualID = componentToTest.getCurrentID();
         // Assert
         assertEquals(expectedID, actualID);
@@ -43,7 +41,7 @@ class IDGeneratorTest {
         // Arrange
         int expectedID = 100000;
         // Act
-        componentToTest = new IDGenerator(new AtomicInteger(100000));
+        componentToTest = new DefaultIDGeneratorFactory().createIDGenerator(100000);
         int actualID = componentToTest.getCurrentID();
         // Assert
         assertEquals(expectedID, actualID);
@@ -76,7 +74,7 @@ class IDGeneratorTest {
     void reset_StartsWithIdAtHundredThousand_ShouldResetIDToZero() {
         // Arrange
         int expectedID = 0;
-        componentToTest = new IDGenerator(new AtomicInteger(100000));
+        componentToTest = new DefaultIDGeneratorFactory().createIDGenerator(100000);
         // Act
         componentToTest.reset();
         int actualID = componentToTest.getCurrentID();

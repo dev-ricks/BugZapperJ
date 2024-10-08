@@ -29,7 +29,6 @@ public class ValidationException extends RuntimeException {
         }
     }
 
-
     public Map<String, String> getValidationErrors() {
         return errorMessages;
     }

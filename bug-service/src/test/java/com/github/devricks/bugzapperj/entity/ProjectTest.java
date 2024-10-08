@@ -1,12 +1,11 @@
 package com.github.devricks.bugzapperj.entity;
 
 import com.github.devricks.bugzapperj.entity.exception.ValidationException;
-import com.github.devricks.bugzapperj.entity.util.IDGenerator;
+import com.github.devricks.bugzapperj.entity.util.DefaultIDGeneratorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,22 +19,20 @@ class ProjectTest {
     @Test
     void Project_WhenProjectNameIsProvided_ShouldCreateProjectWithAppropriateValues() {
         // Arrange
-        int expectedID = 1;
         String expectedName = "project";
         // Act
-        Project project = new Project.Builder().setName(expectedName).build();
+        Project project = new Project.Builder().withName(expectedName).build();
         // Assert
         assertNotNull(project);
-        assertEquals(expectedID, project.getId());
         assertEquals(expectedName, project.getName());
     }
 
     @Test
     void Project_BuilderWithBugs_ShouldSetBugs() {
         // Arrange
-        Set<Bug> expectedBugs = Set.of(new Bug.Builder().setName("bug1").build());
+        Set<Bug> expectedBugs = Set.of(new Bug.Builder().withName("bug1").build());
         // Act
-        Project project = new Project.Builder().setName("project").setBugs(expectedBugs).build();
+        Project project = new Project.Builder().withName("project").withBugs(expectedBugs).build();
         // Assert
         assertEquals(expectedBugs, project.getBugs());
     }
@@ -43,7 +40,7 @@ class ProjectTest {
     @Test
     void Project_BuilderWithNullBugs_ShouldHandleGracefully() {
         // Act
-        Project project = new Project.Builder().setName("project").setBugs(null).build();
+        Project project = new Project.Builder().withName("project").withBugs(null).build();
         // Assert
         assertNotNull(project.getBugs());
     }
@@ -52,18 +49,20 @@ class ProjectTest {
     void getId_CreateFirstProject_ProjectIdShouldBeOne() {
         // Arrange
         int expectedID = 1;
-        Project project = new Project.Builder().setName("project").build();
+        Project projectComponentToTest = new Project.Builder()
+                .withName("project")
+                .build();
         // Act
-        int actualID = project.getId();
+        projectComponentToTest.createId();
         // Assert
-        assertEquals(expectedID, actualID);
+        assertEquals(expectedID, projectComponentToTest.getId());
     }
 
     @Test
     void getName_CreateProjectWithName_ProjectShouldHaveSameName() {
         // Arrange
         String expectedName = "project";
-        Project project = new Project.Builder().setName(expectedName).build();
+        Project project = new Project.Builder().withName(expectedName).build();
         // Act
         String actualName = project.getName();
         // Assert
@@ -73,8 +72,8 @@ class ProjectTest {
     @Test
     void getBugs_CreateProjectThenAddsBug_ProjectShouldHaveAllPropertiesSet() {
         // Arrange
-        Project project = new Project.Builder().setName("project").build();
-        Bug expectedBug = new Bug.Builder().setName("name").setDescription("description").setProject(project).build();
+        Project project = new Project.Builder().withName("project").build();
+        Bug expectedBug = new Bug.Builder().withName("name").withDescription("description").withProject(project).build();
         project.addBug(expectedBug);
         // Act
         Set<Bug> actualBugs = project.getBugs();
@@ -89,10 +88,10 @@ class ProjectTest {
     @Test
     void addBugs_CreateProjectThenAddsMultipleBugs_ProjectShouldHaveAllPropertiesSet() {
         // Arrange
-        Project project = new Project.Builder().setName("project").build();
-        Bug expectedBug1 = new Bug.Builder().setName("name1").setDescription("description1").setProject(project).build();
-        Bug expectedBug2 = new Bug.Builder().setName("name2").setDescription("description2").setProject(project).build();
-        Bug expectedBug3 = new Bug.Builder().setName("name3").setDescription("description3").setProject(project).build();
+        Project project = new Project.Builder().withName("project").build();
+        Bug expectedBug1 = new Bug.Builder().withName("name1").withDescription("description1").withProject(project).build();
+        Bug expectedBug2 = new Bug.Builder().withName("name2").withDescription("description2").withProject(project).build();
+        Bug expectedBug3 = new Bug.Builder().withName("name3").withDescription("description3").withProject(project).build();
         project.addBugs(Set.of(expectedBug1, expectedBug2, expectedBug3));
         // Act
         Set<Bug> actualBugs = project.getBugs();
@@ -116,7 +115,7 @@ class ProjectTest {
     void addBugs_WithNull_ShouldHandleGracefully() {
         // Arrange
         Project project = new Project.Builder()
-                .setName("project")
+                .withName("project")
                 .build();
         // Act
         project.addBugs(null);
@@ -128,9 +127,9 @@ class ProjectTest {
     void addBugs_WithDuplicates_ShouldNotAddDuplicates() {
         // Arrange
         Project project = new Project.Builder()
-                .setName("project")
+                .withName("project")
                 .build();
-        Bug bug = new Bug.Builder().setName("bug1").build();
+        Bug bug = new Bug.Builder().withName("bug1").build();
         project.addBug(bug);
         // Act
         project.addBugs(Set.of(bug));
@@ -141,13 +140,12 @@ class ProjectTest {
     @Test
     void resetIDGenerator_IDStartsAtHundredThousand_IDGeneratorShouldBeSetAtZeroAgain() {
         // Arrange
-        Project project = new Project.Builder().setName("project").build();
-        Project.IDGeneratorProject = new IDGenerator(new AtomicInteger(100000));
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(100000);
         int expectedID = 0;
         // Act
         Project.resetIDGenerator();
         // Assert
-        assertEquals(expectedID, Project.IDGeneratorProject.getCurrentID());
+        assertEquals(expectedID, Project.IDGenerator.getCurrentID());
     }
 
     @Test
@@ -155,7 +153,7 @@ class ProjectTest {
         // Arrange
         int expectedNumberOfErrors = 1;
         String expectedName = null;
-        Project expectedProject = new Project.Builder().setName(expectedName).build();
+        Project expectedProject = new Project.Builder().withName(expectedName).build();
         // Act
         // Assert
         ValidationException exception = assertThrows(ValidationException.class, expectedProject::validate);
@@ -167,7 +165,7 @@ class ProjectTest {
         // Arrange
         int expectedNumberOfErrors = 1;
         String expectedName = "";
-        Project expectedProject = new Project.Builder().setName(expectedName).build();
+        Project expectedProject = new Project.Builder().withName(expectedName).build();
         // Act
         // Assert
         ValidationException exception = assertThrows(ValidationException.class, expectedProject::validate);
@@ -179,7 +177,7 @@ class ProjectTest {
         // Arrange
         int expectedNumberOfErrors = 1;
         String expectedName = "   ";
-        Project expectedProject = new Project.Builder().setName(expectedName).build();
+        Project expectedProject = new Project.Builder().withName(expectedName).build();
         // Act
         // Assert
         ValidationException exception = assertThrows(ValidationException.class, expectedProject::validate);
@@ -191,9 +189,22 @@ class ProjectTest {
     void validate_WithValidName_ShouldNotThrowException() {
         // Arrange
         Project project = new Project.Builder()
-                .setName("validName")
+                .withName("validName")
                 .build();
         // Act & Assert
         assertDoesNotThrow(project::validate);
+    }
+
+    @Test
+    void createId_CreateProject_ProjectIdShouldBeOne() {
+        // Arrange
+        int expectedID = 1;
+        Project projectComponentToTest = new Project.Builder()
+                .withName("project")
+                .build();
+        // Act
+        projectComponentToTest.createId();
+        // Assert
+        assertEquals(expectedID, projectComponentToTest.getId());
     }
 }

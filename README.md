@@ -7,7 +7,11 @@ to create a group of standalone microservices. The application uses Spring Data 
 database.
 
 A client application is under construction that will use the RESTful API to interact with the server. This client will
-be react.js based.
+be react.js based.  
+
+## README Blog links
+- [10-08-2024 Explain Project Direction](development-blog/10-08-2024-explain-project-direction.md)
+
 ## Future Plans
 - Work on architecture documentation
 - Create a client application using React.js

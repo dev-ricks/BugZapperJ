@@ -1,26 +1,14 @@
 package com.github.devricks.bugzapperj.entity;
 
 import com.github.devricks.bugzapperj.entity.exception.ValidationException;
-import com.github.devricks.bugzapperj.entity.util.IDGenerator;
-import com.github.devricks.bugzapperj.entity.validation.Validator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Bug implements Validator {
-    private int id;
+public class Bug extends EntityBase {
     private String name;
     private String description;
     private Project project;
-
-    public static IDGenerator IDGeneratorBug = new IDGenerator();
-
-    private Bug() {
-    }
-
-    public int getId() {
-        return id;
-    }
 
     public String getName() {
         return name;
@@ -34,6 +22,7 @@ public class Bug implements Validator {
         return project;
     }
 
+    @Override
     public void validate() throws ValidationException {
         Map<String, String> errorMessagesMap = new HashMap<>();
         if (name == null || name.isBlank()) {
@@ -50,34 +39,32 @@ public class Bug implements Validator {
         }
     }
 
+    @Override
     public void createId() {
-        this.id = IDGeneratorBug.generateID();
+        setId(IDGenerator.generateID());
     }
 
-    static public void resetIDGenerator() {
-        IDGeneratorBug.reset();
-    }
-
-    public static class Builder {
+    public static class Builder implements EntityBuilder {
         private String name;
         private String description;
         private Project project;
 
-        public Builder setName(String name) {
+        public Builder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder setDescription(String description) {
+        public Builder withDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public Builder setProject(Project project) {
+        public Builder withProject(Project project) {
             this.project = project;
             return this;
         }
 
+        @Override
         public Bug build() {
             Bug bug = new Bug();
             bug.name = this.name;

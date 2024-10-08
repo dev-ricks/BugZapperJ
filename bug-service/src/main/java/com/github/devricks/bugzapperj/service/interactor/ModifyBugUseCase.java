@@ -7,7 +7,11 @@ import com.github.devricks.bugzapperj.entity.exception.ValidationException;
 public class ModifyBugUseCase {
 
     public Bug createBug(String name, String description, Project project) throws ValidationException {
-        Bug createdBug = new Bug.Builder().setName(name).setDescription(description).setProject(project).build();
+        Bug createdBug = new Bug.Builder()
+                .withName(name)
+                .withDescription(description)
+                .withProject(project)
+                .build();
         createdBug.validate();
         createdBug.createId();
         return createdBug;

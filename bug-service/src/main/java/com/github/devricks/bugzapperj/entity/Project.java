@@ -1,23 +1,14 @@
 package com.github.devricks.bugzapperj.entity;
 
 import com.github.devricks.bugzapperj.entity.exception.ValidationException;
-import com.github.devricks.bugzapperj.entity.util.IDGenerator;
-import com.github.devricks.bugzapperj.entity.validation.Validator;
 
 import java.util.*;
 
-public class Project implements Validator {
-    private int id;
+public class Project extends EntityBase {
     private String name;
     private Set<Bug> bugs;
 
-    static public IDGenerator IDGeneratorProject = new IDGenerator();
-
     private Project() {
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {
@@ -38,6 +29,7 @@ public class Project implements Validator {
         this.bugs.add(bug);
     }
 
+    @Override
     public void validate() throws ValidationException {
         Map<String, String> errorMessagesMap = new HashMap<>();
         if (name == null || name.isBlank()) {
@@ -48,27 +40,28 @@ public class Project implements Validator {
         }
     }
 
-    static public void resetIDGenerator() {
-        IDGeneratorProject.reset();
+    @Override
+    public void createId() {
+        setId(IDGenerator.generateID());
     }
 
-    public static class Builder {
+    public static class Builder implements EntityBuilder {
         private String name;
         private Set<Bug> bugs = new HashSet<>();
 
-        public Builder setName(String name) {
+        public Builder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder setBugs(Set<Bug> bugs) {
+        public Builder withBugs(Set<Bug> bugs) {
             this.bugs = bugs;
             return this;
         }
 
+        @Override
         public Project build() {
             Project project = new Project();
-            project.id = IDGeneratorProject.generateID();
             project.name = name;
             project.bugs = Objects.requireNonNullElseGet(bugs, HashSet::new);
             return project;

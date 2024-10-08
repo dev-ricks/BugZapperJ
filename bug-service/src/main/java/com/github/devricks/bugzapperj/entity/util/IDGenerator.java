@@ -1,28 +1,11 @@
 package com.github.devricks.bugzapperj.entity.util;
 
-import java.util.concurrent.atomic.AtomicInteger;
+public interface IDGenerator {
 
-public class IDGenerator {
+    int generateID();
 
-    private final AtomicInteger id;
+    void reset();
 
-    public IDGenerator() {
-        this.id = new AtomicInteger(0);
-    }
-
-    public IDGenerator(AtomicInteger id) {
-        this.id = id;
-    }
-
-    public int generateID() {
-        return id.incrementAndGet();
-    }
-
-    public void reset() {
-        id.set(0);
-    }
-
-    public int getCurrentID() {
-        return id.get();
-    }
+    int getCurrentID();
 }
+

@@ -22,7 +22,7 @@ class ModifyBugUseCaseTest {
         String expectedName = "name";
         String expectedDescription = "description";
         Project expectedProject = new Project.Builder()
-                .setName("project")
+                .withName("project")
                 .build();
         // Act
         Bug bug = modifyBugUseCase.createBug(expectedName, expectedDescription, expectedProject);
@@ -39,9 +39,9 @@ class ModifyBugUseCaseTest {
         int expectedErrorCount = 1;
         ModifyBugUseCase componentToTest = new ModifyBugUseCase();
         Bug expectedBug = new Bug.Builder()
-                .setDescription("description")
-                .setProject(new Project.Builder()
-                        .setName("project")
+                .withDescription("description")
+                .withProject(new Project.Builder()
+                        .withName("project")
                         .build())
                 .build();
         // Act
@@ -56,9 +56,9 @@ class ModifyBugUseCaseTest {
         int expectedErrorCount = 1;
         ModifyBugUseCase componentToTest = new ModifyBugUseCase();
         Bug expectedBug = new Bug.Builder()
-                .setName("name")
-                .setProject(new Project.Builder()
-                        .setName("project")
+                .withName("name")
+                .withProject(new Project.Builder()
+                        .withName("project")
                         .build())
                 .build();
         // Act
@@ -73,8 +73,8 @@ class ModifyBugUseCaseTest {
         int expectedErrorCount = 1;
         ModifyBugUseCase componentToTest = new ModifyBugUseCase();
         Bug expectedBug = new Bug.Builder()
-                .setName("name")
-                .setDescription("description")
+                .withName("name")
+                .withDescription("description")
                 .build();
         // Act
         // Assert
@@ -88,7 +88,7 @@ class ModifyBugUseCaseTest {
         int expectedErrorCount = 2;
         ModifyBugUseCase componentToTest = new ModifyBugUseCase();
         Project expectedProject = new Project.Builder()
-                .setName("project")
+                .withName("project")
                 .build();
         // Act
         // Assert
@@ -117,7 +117,7 @@ class ModifyBugUseCaseTest {
         String expectedName = "name";
         String expectedDescription = "description";
         Project expectedProject = new Project.Builder()
-                .setName("project")
+                .withName("project")
                 .build();
         int expectedIdDifference = 1;
         // Act
@@ -135,7 +135,7 @@ class ModifyBugUseCaseTest {
         String expectedName = "name";
         String expectedDescription = "description";
         Project expectedProject = new Project.Builder()
-                .setName("project")
+                .withName("project")
                 .build();
         int expectedId = 1;
         // Act
@@ -151,11 +151,11 @@ class ModifyBugUseCaseTest {
         String expectedName = null;
         String expectedDescription = "description";
         Project expectedProject = new Project.Builder()
-                .setName("project")
+                .withName("project")
                 .build();
         int expectedId = 0;
         // Act // Assert
         assertThrows(ValidationException.class, () -> modifyBugUseCase.createBug(expectedName, expectedDescription, expectedProject));
-        assertEquals(expectedId, Bug.IDGeneratorBug.getCurrentID());
+        assertEquals(expectedId, Bug.IDGenerator.getCurrentID());
     }
 }
