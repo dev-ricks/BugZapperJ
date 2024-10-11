@@ -1,6 +1,7 @@
 package com.github.devricks.bugzapperj.entity;
 
 import com.github.devricks.bugzapperj.entity.exception.ValidationException;
+import com.github.devricks.bugzapperj.util.HelperFunctions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,12 +24,12 @@ public class Bug extends EntityBase {
     }
 
     @Override
-    public void validate() throws ValidationException {
+    public void validate() {
         Map<String, String> errorMessagesMap = new HashMap<>();
-        if (name == null || name.isBlank()) {
+        if (name == null || HelperFunctions.isBlank(name)) {
             errorMessagesMap.put("name", "Name cannot be empty");
         }
-        if (description == null || description.isBlank()) {
+        if (description == null || HelperFunctions.isBlank(description)) {
             errorMessagesMap.put("description", "Description cannot be empty");
         }
         if (project == null) {

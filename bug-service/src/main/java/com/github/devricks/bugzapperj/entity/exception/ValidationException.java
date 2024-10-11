@@ -20,6 +20,11 @@ public class ValidationException extends RuntimeException {
         this.errorMessages.putAll(errorMessages);
     }
 
+    @Override
+    public String getMessage() {
+        return errorMessages.toString();
+    }
+
     public void addErrorMessage(String propertyKey, String message) {
         if (message == null) {
             errorMessages.remove(propertyKey);
