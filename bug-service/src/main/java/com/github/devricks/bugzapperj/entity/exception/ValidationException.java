@@ -4,6 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ValidationException extends RuntimeException {
+
+    public static final String NAME_IS_REQUIRED = "name:Name is required";
+    public static final String DESCRIPTION_IS_REQUIRED = "description:Description is required";
+
     private final Map<String, String> errorMessages = new LinkedHashMap<>();
 
     public ValidationException() {
@@ -22,7 +26,9 @@ public class ValidationException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return errorMessages.toString();
+        StringBuffer messageBuffer = new StringBuffer();
+        errorMessages.values().forEach((value) -> messageBuffer.append(value).append(System.lineSeparator()));
+        return messageBuffer.toString();
     }
 
     public void addErrorMessage(String propertyKey, String message) {

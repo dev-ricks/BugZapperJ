@@ -1,9 +1,11 @@
 package com.github.devricks.bugzapperj.entity;
 
+import com.github.devricks.bugzapperj.data.InputData;
 import com.github.devricks.bugzapperj.entity.exception.ValidationException;
 import com.github.devricks.bugzapperj.entity.util.DefaultIDGeneratorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import testing.data.InputDataForBugEntities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,20 +21,16 @@ class BugTest {
         // Arrange
         String expectedName = "bug";
         String expectedDescription = "description";
-        Project project = new Project.Builder()
-                .withName("project")
-                .build();
+        Integer expectedProjectId = 1;
+        String expectedProjectName = "project";
         // Act
-        Bug componentToTest = new Bug.Builder()
-                .withName(expectedName)
-                .withDescription(expectedDescription)
-                .withProject(project)
-                .build();
+        Bug componentToTest = new Bug.Builder().withName(expectedName).withDescription(expectedDescription).withProjectId(expectedProjectId).withProjectName(expectedProjectName).build();
         // Assert
         assertNotNull(componentToTest);
         assertEquals(expectedName, componentToTest.getName());
         assertEquals(expectedDescription, componentToTest.getDescription());
-        assertEquals(project, componentToTest.getProject());
+        assertEquals(expectedProjectId, componentToTest.getProjectId());
+        assertEquals(expectedProjectName, componentToTest.getProjectName());
     }
 
     @Test
@@ -40,9 +38,7 @@ class BugTest {
         // Arrange
         String expectedName = "bug";
         // Act
-        Bug componentToTest = new Bug.Builder()
-                .withName(expectedName)
-                .build();
+        Bug componentToTest = new Bug.Builder().withName(expectedName).build();
         // Assert
         assertNotNull(componentToTest);
         assertEquals(expectedName, componentToTest.getName());
@@ -53,9 +49,7 @@ class BugTest {
         // Arrange
         String expectedDescription = "description";
         // Act
-        Bug componentToTest = new Bug.Builder()
-                .withDescription(expectedDescription)
-                .build();
+        Bug componentToTest = new Bug.Builder().withDescription(expectedDescription).build();
         // Assert
         assertNotNull(componentToTest);
         assertEquals(expectedDescription, componentToTest.getDescription());
@@ -64,29 +58,21 @@ class BugTest {
     @Test
     void BugCreate_WhenProjectPropertyIsSet_ShouldCreateBugWithAppropriateValues() {
         // Arrange
-        Project project = new Project.Builder()
-                .withName("project")
-                .build();
+        Integer expectedProjectId = 1;
+        String expectedProjectName = "project";
         // Act
-        Bug componentToTest = new Bug.Builder()
-                .withProject(project)
-                .build();
+        Bug componentToTest = new Bug.Builder().withProjectId(expectedProjectId).withProjectName(expectedProjectName).build();
         // Assert
         assertNotNull(componentToTest);
-        assertEquals(project, componentToTest.getProject());
+        assertEquals(expectedProjectId, componentToTest.getProjectId());
+        assertEquals(expectedProjectName, componentToTest.getProjectName());
     }
 
     @Test
     void getId_CreateFirstBug_BugIdShouldBeZero() {
         // Arrange
         int expectedID = 0;
-        Bug bugComponentToTest = new Bug.Builder()
-                .withName("bug")
-                .withDescription("description")
-                .withProject(new Project.Builder()
-                        .withName("project")
-                        .build())
-                .build();
+        Bug bugComponentToTest = new Bug.Builder().withName("bug").withDescription("description").build();
         // Act
         int actualID = bugComponentToTest.getId();
         // Assert
@@ -97,9 +83,7 @@ class BugTest {
     void getName_CreateBugWithName_BugShouldHaveSameName() {
         // Arrange
         String expectedName = "bug";
-        Bug bugComponentToTest = new Bug.Builder()
-                .withName(expectedName)
-                .build();
+        Bug bugComponentToTest = new Bug.Builder().withName(expectedName).build();
         // Act
         String actualName = bugComponentToTest.getName();
         // Assert
@@ -110,9 +94,7 @@ class BugTest {
     void getDescription_CreateBugWithDescription_BugShouldHaveSameDescription() {
         // Arrange
         String expectedDescription = "description";
-        Bug bugComponentToTest = new Bug.Builder()
-                .withDescription(expectedDescription)
-                .build();
+        Bug bugComponentToTest = new Bug.Builder().withDescription(expectedDescription).build();
         // Act
         String actualDescription = bugComponentToTest.getDescription();
         // Assert
@@ -122,16 +104,12 @@ class BugTest {
     @Test
     void getProject_CreateBugWithProject_BugShouldHaveSameProject() {
         // Arrange
-        Project expectedProject = new Project.Builder()
-                .withName("project")
-                .build();
-        Bug bugComponentToTest = new Bug.Builder()
-                .withProject(expectedProject)
-                .build();
-        // Act
-        Project actualProject = bugComponentToTest.getProject();
-        // Assert
-        assertEquals(expectedProject, actualProject);
+        Integer expectedProjectId = 1;
+        String expectedProjectName = "project";
+        Bug bugComponentToTest = new Bug.Builder().withProjectId(expectedProjectId).withProjectName(expectedProjectName).build();
+        // Act // Assert
+        assertEquals(expectedProjectId, bugComponentToTest.getProjectId());
+        assertEquals(expectedProjectName, bugComponentToTest.getProjectName());
     }
 
     @Test
@@ -139,13 +117,7 @@ class BugTest {
         // Arrange
         String bugName = null;
         int expectedErrorMessages = 1;
-        Bug bugComponentToTest = new Bug.Builder()
-                .withName(bugName)
-                .withDescription("description")
-                .withProject(new Project.Builder()
-                        .withName("project")
-                        .build())
-                .build();
+        Bug bugComponentToTest = new Bug.Builder().withName(bugName).withDescription("description").build();
         // Act // Assert
         ValidationException exception = assertThrows(ValidationException.class, bugComponentToTest::validate);
         assertEquals(expectedErrorMessages, exception.getValidationErrors().size());
@@ -156,30 +128,18 @@ class BugTest {
         // Arrange
         String bugName = "";
         int expectedErrorMessages = 1;
-        Bug bugComponentToTest = new Bug.Builder()
-                .withName(bugName)
-                .withDescription("description")
-                .withProject(new Project.Builder()
-                        .withName("project")
-                        .build())
-                .build();
+        Bug bugComponentToTest = new Bug.Builder().withName(bugName).withDescription("description").build();
         // Act // Assert
         ValidationException exception = assertThrows(ValidationException.class, bugComponentToTest::validate);
         assertEquals(expectedErrorMessages, exception.getValidationErrors().size());
     }
 
     @Test
-    void validate_BugWithNull_ThrowsEntityValidationException() {
+    void validate_BugWithNullDescription_ThrowsEntityValidationException() {
         // Arrange
         String bugDescription = null;
         int expectedErrorMessages = 1;
-        Bug bugComponentToTest = new Bug.Builder()
-                .withName("bug")
-                .withDescription(bugDescription)
-                .withProject(new Project.Builder()
-                        .withName("project")
-                        .build())
-                .build();
+        Bug bugComponentToTest = new Bug.Builder().withName("bug").withDescription(bugDescription).build();
         // Act // Assert
         ValidationException exception = assertThrows(ValidationException.class, bugComponentToTest::validate);
         assertEquals(expectedErrorMessages, exception.getValidationErrors().size());
@@ -190,13 +150,7 @@ class BugTest {
         // Arrange
         String bugDescription = "";
         int expectedErrorMessages = 1;
-        Bug bugComponentToTest = new Bug.Builder()
-                .withName("bug")
-                .withDescription(bugDescription)
-                .withProject(new Project.Builder()
-                        .withName("project")
-                        .build())
-                .build();
+        Bug bugComponentToTest = new Bug.Builder().withName("bug").withDescription(bugDescription).build();
         // Act
         // Assert
         ValidationException exception = assertThrows(ValidationException.class, bugComponentToTest::validate);
@@ -204,32 +158,12 @@ class BugTest {
     }
 
     @Test
-    void validate_BugWithNullProject_ThrowsEntityValidationException() {
-        // Arrange
-        Project bugProject = null;
-        int expectedErrorMessages = 1;
-        Bug bugComponentToTest = new Bug.Builder()
-                .withName("bug")
-                .withDescription("description")
-                .withProject(bugProject)
-                .build();
-        // Act // Assert
-        ValidationException exception = assertThrows(ValidationException.class, bugComponentToTest::validate);
-        assertEquals(expectedErrorMessages, exception.getValidationErrors().size());
-    }
-
-    @Test
-    void validate_BugWithNoNameAndDescriptionAndProject_ThrowsEntityValidationException() {
+    void validate_BugWithNoNameAndDescription_ThrowsEntityValidationException() {
         // Arrange
         String bugName = null;
         String bugDescription = null;
-        Project bugProject = null;
-        int expectedErrorMessages = 3;
-        Bug bugComponentToTest = new Bug.Builder()
-                .withName(bugName)
-                .withDescription(bugDescription)
-                .withProject(bugProject)
-                .build();
+        int expectedErrorMessages = 2;
+        Bug bugComponentToTest = new Bug.Builder().withName(bugName).withDescription(bugDescription).build();
         // Act // Assert
         ValidationException exception = assertThrows(ValidationException.class, bugComponentToTest::validate);
         assertEquals(expectedErrorMessages, exception.getValidationErrors().size());
@@ -248,18 +182,167 @@ class BugTest {
 
     @Test
     void createId_Bug_ShouldResultInIDOfOne() {
-        // Arrange
         int expectedID = 1;
-        Bug bugComponentToTest = new Bug.Builder()
-                .withName("bug")
-                .withDescription("description")
-                .withProject(new Project.Builder()
-                        .withName("project")
-                        .build())
-                .build();
-        // Act
+        Bug bugComponentToTest = new Bug.Builder().withName("bug").withDescription("description").build();
         bugComponentToTest.createId();
-        // Assert
         assertEquals(expectedID, bugComponentToTest.getId());
     }
+
+    @Test
+    void createBug_GivenBug_ThenReturnBugWithInactivatedFalse() {
+        Bug whenBugComponentToTest = new Bug.Builder().withName("bug").withDescription("description").build();
+        boolean thenInactivated = whenBugComponentToTest.isInactivated();
+        assertFalse(thenInactivated);
+    }
+
+    @Test
+    void createBug_GivenBug_ThenReturnBugWithPersistedFalse() {
+        Bug whenBugComponentToTest = new Bug.Builder().withName("bug").withDescription("description").build();
+        boolean thenPersisted = whenBugComponentToTest.isPersisted();
+        assertFalse(thenPersisted);
+    }
+
+    @Test
+    void createBug_GivenBug_ThenReturnBugWithInactivatedTrue() {
+        Bug whenBugComponentToTest = new Bug.Builder().withName("bug").withDescription("description").build();
+        whenBugComponentToTest.setInactivated(true);
+        boolean thenInactivated = whenBugComponentToTest.isInactivated();
+        assertTrue(thenInactivated);
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithPersistedTrue() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        whenBugComponentToTest.setPersisted(true);
+        boolean thenPersisted = whenBugComponentToTest.isPersisted();
+        assertTrue(thenPersisted);
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithInactivatedTrue() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        whenBugComponentToTest.setInactivated(true);
+        boolean thenInactivated = whenBugComponentToTest.isInactivated();
+        assertTrue(thenInactivated);
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithInactivatedFalse() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        boolean thenInactivated = whenBugComponentToTest.isInactivated();
+        assertFalse(thenInactivated);
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithPersistedFalse() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        boolean thenPersisted = whenBugComponentToTest.isPersisted();
+        assertFalse(thenPersisted);
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithAppropriateValues() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        assertEquals(inputData.name, whenBugComponentToTest.getName());
+        assertEquals(inputData.description, whenBugComponentToTest.getDescription());
+        assertEquals(inputData.projectId, whenBugComponentToTest.getProjectId());
+        assertEquals(inputData.projectName, whenBugComponentToTest.getProjectName());
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithAppropriateValuesAndInactivatedTrue() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        whenBugComponentToTest.setInactivated(true);
+        assertEquals(inputData.name, whenBugComponentToTest.getName());
+        assertEquals(inputData.description, whenBugComponentToTest.getDescription());
+        assertEquals(inputData.projectId, whenBugComponentToTest.getProjectId());
+        assertEquals(inputData.projectName, whenBugComponentToTest.getProjectName());
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithAppropriateValuesAndPersistedTrue() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        whenBugComponentToTest.setPersisted(true);
+        assertEquals(inputData.name, whenBugComponentToTest.getName());
+        assertEquals(inputData.description, whenBugComponentToTest.getDescription());
+        assertEquals(inputData.projectId, whenBugComponentToTest.getProjectId());
+        assertEquals(inputData.projectName, whenBugComponentToTest.getProjectName());
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithAppropriateValuesAndPersistedTrueAndInactivatedTrue() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        whenBugComponentToTest.setPersisted(true);
+        whenBugComponentToTest.setInactivated(true);
+        assertEquals(inputData.name, whenBugComponentToTest.getName());
+        assertEquals(inputData.description, whenBugComponentToTest.getDescription());
+        assertEquals(inputData.projectId, whenBugComponentToTest.getProjectId());
+        assertEquals(inputData.projectName, whenBugComponentToTest.getProjectName());
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithAppropriateValuesAndPersistedFalseAndInactivatedFalse() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        whenBugComponentToTest.setPersisted(false);
+        whenBugComponentToTest.setInactivated(false);
+        assertEquals(inputData.name, whenBugComponentToTest.getName());
+        assertEquals(inputData.description, whenBugComponentToTest.getDescription());
+        assertEquals(inputData.projectId, whenBugComponentToTest.getProjectId());
+        assertEquals(inputData.projectName, whenBugComponentToTest.getProjectName());
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithAppropriateValuesAndPersistedFalseAndInactivatedTrue() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        whenBugComponentToTest.setPersisted(false);
+        whenBugComponentToTest.setInactivated(true);
+        assertEquals(inputData.name, whenBugComponentToTest.getName());
+        assertEquals(inputData.description, whenBugComponentToTest.getDescription());
+        assertEquals(inputData.projectId, whenBugComponentToTest.getProjectId());
+        assertEquals(inputData.projectName, whenBugComponentToTest.getProjectName());
+    }
+
+    @Test
+    void createBug_GivenValidInputData_ThenReturnBugWithAppropriateValuesAndPersistedTrueAndInactivatedFalse() {
+        InputData inputData = InputDataForBugEntities.createValidInputData();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        whenBugComponentToTest.setPersisted(true);
+        whenBugComponentToTest.setInactivated(false);
+        assertEquals(inputData.name, whenBugComponentToTest.getName());
+        assertEquals(inputData.description, whenBugComponentToTest.getDescription());
+        assertEquals(inputData.projectId, whenBugComponentToTest.getProjectId());
+        assertEquals(inputData.projectName, whenBugComponentToTest.getProjectName());
+    }
+
+    @Test
+    void createBug_GivenInvalidInputDataEmptyName_ThenReturnBugWithAppropriateValues() {
+        InputData inputData = InputDataForBugEntities.createInputDataWithEmptyName();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        assertEquals(inputData.name, whenBugComponentToTest.getName());
+        assertEquals(inputData.description, whenBugComponentToTest.getDescription());
+        assertEquals(inputData.projectId, whenBugComponentToTest.getProjectId());
+        assertEquals(inputData.projectName, whenBugComponentToTest.getProjectName());
+    }
+
+    @Test
+    void createBug_GivenInvalidInputDataNullName_ThenReturnBugWithAppropriateValuesAndInactivatedTrue() {
+        InputData inputData = InputDataForBugEntities.createInputDataWithNullName();
+        Bug whenBugComponentToTest = new Bug.Builder().build(inputData);
+        whenBugComponentToTest.setInactivated(true);
+        assertEquals(inputData.name, whenBugComponentToTest.getName());
+        assertEquals(inputData.description, whenBugComponentToTest.getDescription());
+        assertEquals(inputData.projectId, whenBugComponentToTest.getProjectId());
+        assertEquals(inputData.projectName, whenBugComponentToTest.getProjectName());
+    }
+
 }

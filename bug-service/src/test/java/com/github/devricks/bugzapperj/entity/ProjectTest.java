@@ -17,6 +17,16 @@ class ProjectTest {
     }
 
     @Test
+    void Project_BuilderWithNullName_ShouldHandleGracefully() {
+        // Act
+        Project project = new Project.Builder().withName(null).build();
+        // Assert
+        assertNotNull(project);
+        assertNull(project.getName());
+    }
+
+
+    @Test
     void Project_WhenProjectNameIsProvided_ShouldCreateProjectWithAppropriateValues() {
         // Arrange
         String expectedName = "project";
@@ -73,42 +83,50 @@ class ProjectTest {
     void getBugs_CreateProjectThenAddsBug_ProjectShouldHaveAllPropertiesSet() {
         // Arrange
         Project project = new Project.Builder().withName("project").build();
-        Bug expectedBug = new Bug.Builder().withName("name").withDescription("description").withProject(project).build();
+        Bug expectedBug = new Bug.Builder()
+                .withName("name")
+                .withDescription("description")
+                .withProjectId(project.getId())
+                .withProjectName(project.getName())
+                .build();
         project.addBug(expectedBug);
         // Act
         Set<Bug> actualBugs = project.getBugs();
-        Set<Bug> bugProjectBugs = expectedBug.getProject().getBugs();
         // Assert
         assertNotNull(actualBugs);
-        assertNotNull(bugProjectBugs);
         assertTrue(actualBugs.contains(expectedBug));
-        assertTrue(bugProjectBugs.contains(expectedBug));
     }
 
     @Test
     void addBugs_CreateProjectThenAddsMultipleBugs_ProjectShouldHaveAllPropertiesSet() {
         // Arrange
         Project project = new Project.Builder().withName("project").build();
-        Bug expectedBug1 = new Bug.Builder().withName("name1").withDescription("description1").withProject(project).build();
-        Bug expectedBug2 = new Bug.Builder().withName("name2").withDescription("description2").withProject(project).build();
-        Bug expectedBug3 = new Bug.Builder().withName("name3").withDescription("description3").withProject(project).build();
+        Bug expectedBug1 = new Bug.Builder()
+                .withName("name1")
+                .withDescription("description1")
+                .withProjectId(project.getId())
+                .withProjectName(project.getName())
+                .build();
+        Bug expectedBug2 = new Bug.Builder()
+                .withName("name2")
+                .withDescription("description2")
+                .withProjectId(project.getId())
+                .withProjectName(project.getName())
+                .build();
+        Bug expectedBug3 = new Bug.Builder()
+                .withName("name3")
+                .withDescription("description3")
+                .withProjectId(project.getId())
+                .withProjectName(project.getName())
+                .build();
         project.addBugs(Set.of(expectedBug1, expectedBug2, expectedBug3));
         // Act
         Set<Bug> actualBugs = project.getBugs();
-        Set<Bug> bugProjectBugs1 = expectedBug1.getProject().getBugs();
-        Set<Bug> bugProjectBugs2 = expectedBug2.getProject().getBugs();
-        Set<Bug> bugProjectBugs3 = expectedBug3.getProject().getBugs();
         // Assert
         assertNotNull(actualBugs);
-        assertNotNull(bugProjectBugs1);
-        assertNotNull(bugProjectBugs2);
-        assertNotNull(bugProjectBugs3);
         assertTrue(actualBugs.contains(expectedBug1));
         assertTrue(actualBugs.contains(expectedBug2));
         assertTrue(actualBugs.contains(expectedBug3));
-        assertTrue(bugProjectBugs1.contains(expectedBug1));
-        assertTrue(bugProjectBugs2.contains(expectedBug2));
-        assertTrue(bugProjectBugs3.contains(expectedBug3));
     }
 
     @Test
@@ -207,4 +225,201 @@ class ProjectTest {
         // Assert
         assertEquals(expectedID, projectComponentToTest.getId());
     }
+
+    @Test
+    void createId_CreateMultipleProjects_ProjectIdsShouldBeIncremented() {
+        // Arrange
+        int expectedID1 = 1;
+        int expectedID2 = 2;
+        Project projectComponentToTest1 = new Project.Builder()
+                .withName("project1")
+                .build();
+        Project projectComponentToTest2 = new Project.Builder()
+                .withName("project2")
+                .build();
+        // Act
+        projectComponentToTest1.createId();
+        projectComponentToTest2.createId();
+        // Assert
+        assertEquals(expectedID1, projectComponentToTest1.getId());
+        assertEquals(expectedID2, projectComponentToTest2.getId());
+    }
+
+    @Test
+    void createId_CreateProjectWithIDGeneratorSetTo100000_ProjectIdShouldBe100001() {
+        // Arrange
+        int expectedID = 100001;
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(100000);
+        Project projectComponentToTest = new Project.Builder()
+                .withName("project")
+                .build();
+        // Act
+        projectComponentToTest.createId();
+        // Assert
+        assertEquals(expectedID, projectComponentToTest.getId());
+    }
+
+    @Test
+    void createId_CreateMultipleProjectsWithIDGeneratorSetTo100000_ProjectIdsShouldBeIncremented() {
+        // Arrange
+        int expectedID1 = 100001;
+        int expectedID2 = 100002;
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(100000);
+        Project projectComponentToTest1 = new Project.Builder()
+                .withName("project1")
+                .build();
+        Project projectComponentToTest2 = new Project.Builder()
+                .withName("project2")
+                .build();
+        // Act
+        projectComponentToTest1.createId();
+        projectComponentToTest2.createId();
+        // Assert
+        assertEquals(expectedID1, projectComponentToTest1.getId());
+        assertEquals(expectedID2, projectComponentToTest2.getId());
+    }
+
+    @Test
+    void createId_CreateProjectWithIDGeneratorSetToZeroThenResetIDGenerator_ProjectIdShouldBeOne() {
+        // Arrange
+        int expectedID = 1;
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(0);
+        Project projectComponentToTest = new Project.Builder()
+                .withName("project")
+                .build();
+        // Act
+        projectComponentToTest.createId();
+        // Assert
+        assertEquals(expectedID, projectComponentToTest.getId());
+    }
+
+    @Test
+    void createId_CreateMultipleProjectsWithIDGeneratorSetToZeroThenResetIDGenerator_ProjectIdsShouldBeIncremented() {
+        // Arrange
+        int expectedID1 = 1;
+        int expectedID2 = 2;
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(0);
+        Project projectComponentToTest1 = new Project.Builder()
+                .withName("project1")
+                .build();
+        Project projectComponentToTest2 = new Project.Builder()
+                .withName("project2")
+                .build();
+        // Act
+        projectComponentToTest1.createId();
+        projectComponentToTest2.createId();
+        // Assert
+        assertEquals(expectedID1, projectComponentToTest1.getId());
+        assertEquals(expectedID2, projectComponentToTest2.getId());
+    }
+
+    @Test
+    void createId_CreateProjectWithIDGeneratorSetTo100000ThenResetIDGenerator_ProjectIdShouldBeOne() {
+        // Arrange
+        int expectedID = 1;
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(100000);
+        Project.resetIDGenerator();
+        Project projectComponentToTest = new Project.Builder()
+                .withName("project")
+                .build();
+        // Act
+        projectComponentToTest.createId();
+        // Assert
+        assertEquals(expectedID, projectComponentToTest.getId());
+    }
+
+    @Test
+    void createId_CreateMultipleProjectsWithIDGeneratorSetTo100000ThenResetIDGenerator_ProjectIdsShouldBeIncremented() {
+        // Arrange
+        int expectedID1 = 1;
+        int expectedID2 = 2;
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(100000);
+        Project.resetIDGenerator();
+        Project projectComponentToTest1 = new Project.Builder()
+                .withName("project1")
+                .build();
+        Project projectComponentToTest2 = new Project.Builder()
+                .withName("project2")
+                .build();
+        // Act
+        projectComponentToTest1.createId();
+        projectComponentToTest2.createId();
+        // Assert
+        assertEquals(expectedID1, projectComponentToTest1.getId());
+        assertEquals(expectedID2, projectComponentToTest2.getId());
+    }
+
+    @Test
+    void createId_CreateProjectWithIDGeneratorSetToZeroThenResetIDGeneratorThenCreateProject_ProjectIdShouldBeOne() {
+        // Arrange
+        int expectedID = 1;
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(0);
+        Project.resetIDGenerator();
+        Project projectComponentToTest = new Project.Builder()
+                .withName("project")
+                .build();
+        // Act
+        projectComponentToTest.createId();
+        // Assert
+        assertEquals(expectedID, projectComponentToTest.getId());
+    }
+
+    @Test
+    void createId_CreateProjectWithIDGeneratorSetToZeroThenResetIDGeneratorThenCreateMultipleProjects_ProjectIdsShouldBeIncremented() {
+        // Arrange
+        int expectedID1 = 1;
+        int expectedID2 = 2;
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(0);
+        Project.resetIDGenerator();
+        Project projectComponentToTest1 = new Project.Builder()
+                .withName("project1")
+                .build();
+        Project projectComponentToTest2 = new Project.Builder()
+                .withName("project2")
+                .build();
+        // Act
+        projectComponentToTest1.createId();
+        projectComponentToTest2.createId();
+        // Assert
+        assertEquals(expectedID1, projectComponentToTest1.getId());
+        assertEquals(expectedID2, projectComponentToTest2.getId());
+    }
+
+    @Test
+    void createId_CreateProjectWithIDGeneratorSetTo100000ThenResetIDGeneratorThenCreateProject_ProjectIdShouldBeOne() {
+        // Arrange
+        int expectedID = 1;
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(100000);
+        Project.resetIDGenerator();
+        Project projectComponentToTest = new Project.Builder()
+                .withName("project")
+                .build();
+        // Act
+        projectComponentToTest.createId();
+        // Assert
+        assertEquals(expectedID, projectComponentToTest.getId());
+    }
+
+    // new complete the coverage of tests
+    @Test
+    void createId_CreateProjectWithIDGeneratorSetTo100000ThenResetIDGeneratorThenCreateMultipleProjects_ProjectIdsShouldBeIncremented() {
+        // Arrange
+        int expectedID1 = 1;
+        int expectedID2 = 2;
+        Project.IDGenerator = new DefaultIDGeneratorFactory().createIDGenerator(100000);
+        Project.resetIDGenerator();
+        Project projectComponentToTest1 = new Project.Builder()
+                .withName("project1")
+                .build();
+        Project projectComponentToTest2 = new Project.Builder()
+                .withName("project2")
+                .build();
+        // Act
+        projectComponentToTest1.createId();
+        projectComponentToTest2.createId();
+        // Assert
+        assertEquals(expectedID1, projectComponentToTest1.getId());
+        assertEquals(expectedID2, projectComponentToTest2.getId());
+    }
+
 }

@@ -3,7 +3,10 @@ package com.github.devricks.bugzapperj.presenter;
 import com.github.devricks.bugzapperj.data.OutputData;
 import com.github.devricks.bugzapperj.data.ViewModel;
 
-public interface Presenter {
+public class FakePresenter implements Presenter {
 
-    ViewModel present(OutputData data);
+    @Override
+    public ViewModel present(OutputData data) {
+        return new ViewModel(data);
+    }
 }

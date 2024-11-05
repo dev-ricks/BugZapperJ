@@ -1,5 +1,6 @@
 package com.github.devricks.bugzapperj.entity;
 
+import com.github.devricks.bugzapperj.data.InputData;
 import com.github.devricks.bugzapperj.entity.exception.ValidationException;
 import com.github.devricks.bugzapperj.util.HelperFunctions;
 
@@ -64,6 +65,14 @@ public class Project extends EntityBase {
         public Project build() {
             Project project = new Project();
             project.name = name;
+            project.bugs = Objects.requireNonNullElseGet(bugs, HashSet::new);
+            return project;
+        }
+
+        @Override
+        public Project build(InputData data) {
+            Project project = new Project();
+            project.name = data.name;
             project.bugs = Objects.requireNonNullElseGet(bugs, HashSet::new);
             return project;
         }

@@ -1,44 +1,120 @@
 package com.github.devricks.bugzapperj.service;
 
 import com.github.devricks.bugzapperj.data.InputData;
-import com.github.devricks.bugzapperj.data.OutputData;
-import com.github.devricks.bugzapperj.service.interactor.BugModificationUseCase;
+import com.github.devricks.bugzapperj.presenter.Presenter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import testing.data.InputDataForBugEntities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.verify;
 
 @TestInstance(Lifecycle.PER_CLASS)
-interface BugHandlerServiceBoundaryTest {
+public interface BugHandlerServiceBoundaryTest {
+
+    Presenter getHandlerServicePresenterMock();
 
     BugHandlerService createInstance();
 
+    Integer getExistingBugId();
+
+    void setExistingBugId(Integer existingBugId);
+
     @Test
-    default void createBug_GivenValidInputData_ThenReturnsOutputDataObjectWithSuccessStatus() {
+    default void boundary_InactivateBug_GivenValidInputData_ThenPresenterIsCalledOnceAndPassedOutputDataWithSuccessStatus() {
         BugHandlerService whenBugHandlerServiceBoundary = createInstance();
-        InputData givenInputData = InputDataForBugEntities.createValidInputData();
-        OutputData thenOutputData = whenBugHandlerServiceBoundary.createBug(givenInputData);
-        assertNotNull(thenOutputData);
-        assertEquals("SUCCESS", thenOutputData.status);
+        InputData givenInputData = InputDataForBugEntities.findValidInputData(getExistingBugId());
+        whenBugHandlerServiceBoundary.inactivateBug(givenInputData);
+        verify(getHandlerServicePresenterMock()).present(argThat(outputData -> {
+            assertEquals("SUCCESS", outputData.status);
+            return true;
+        }));
+
     }
 
     @Test
-    default void createBug_GivenInvalidInputData_ThenReturnsOutputDataWithFailedStatus() {
+    default void boundary_InactivateBug_GivenInvalidInputData_ThenPresenterIsCalledOnceAndPassedOutputDataWithFailedStatus() {
         BugHandlerService whenBugHandlerServiceBoundary = createInstance();
-        InputData givenInputData = InputDataForBugEntities.createInputDataWithAllNullValues();
-        OutputData thenOutputData = whenBugHandlerServiceBoundary.createBug(givenInputData);
-        assertNotNull(thenOutputData);
-        assertNotNull(thenOutputData.status);
-        assertEquals("FAILED", thenOutputData.status);
+        whenBugHandlerServiceBoundary.inactivateBug(InputDataForBugEntities.findInvalidInputData(100));
+        verify(getHandlerServicePresenterMock()).present(argThat(outputData -> {
+            assertEquals("FAILED", outputData.status);
+            return true;
+        }));
     }
-}
 
-class BugModificationUseCaseInterfaceTest implements BugHandlerServiceBoundaryTest {
-    @Override
-    public BugHandlerService createInstance() {
-        return new BugModificationUseCase();
+    @Test
+    default void boundary_FindBug_GivenValidInputData_ThenPresenterIsCalledOnceAndPassedOutputDataWithSuccessStatus() {
+        BugHandlerService whenBugHandlerServiceBoundary = createInstance();
+        InputData givenInputData = InputDataForBugEntities.findValidInputData(getExistingBugId());
+        whenBugHandlerServiceBoundary.findBug(givenInputData);
+        verify(getHandlerServicePresenterMock()).present(argThat(outputData -> {
+            assertEquals("SUCCESS", outputData.status);
+            return true;
+        }));
+    }
+
+    @Test
+    default void boundary_FindBug_GivenInvalidInputData_ThenPresenterIsCalledOnceAndPassedOutputDataWithFailedStatus() {
+        BugHandlerService whenBugHandlerServiceBoundary = createInstance();
+        whenBugHandlerServiceBoundary.findBug(InputDataForBugEntities.findInvalidInputData(100));
+        verify(getHandlerServicePresenterMock()).present(argThat(outputData -> {
+            assertEquals("FAILED", outputData.status);
+            return true;
+        }));
+    }
+
+    @Test
+    default void boundary_CreateBug_GivenValidInputData_ThenPresenterIsCalledOnceAndPassedOutputDataWithSuccessStatus() {
+        BugHandlerService whenBugHandlerServiceBoundary = createInstance();
+        whenBugHandlerServiceBoundary.createBug(InputDataForBugEntities.createValidInputData());
+        verify(getHandlerServicePresenterMock()).present(argThat(outputData -> {
+            assertEquals("SUCCESS", outputData.status);
+            return true;
+        }));
+    }
+
+    @Test
+    default void boundary_CreateBug_GivenInvalidInputData_ThenPresenterIsCalledOnceAndPassedOutputDataWithFailedStatus() {
+        BugHandlerService whenBugHandlerServiceBoundary = createInstance();
+        whenBugHandlerServiceBoundary.createBug(InputDataForBugEntities.createInputDataWithAllNullValues());
+        verify(getHandlerServicePresenterMock()).present(argThat(outputData -> {
+            assertEquals("FAILED", outputData.status);
+            return true;
+        }));
+    }
+
+    @Test
+    default void boundary_UpdateBug_GivenValidInputData_ThenPresenterIsCalledOnceAndPassedOutputDataWithSuccessStatus() {
+        BugHandlerService whenBugHandlerServiceBoundary = createInstance();
+        InputData givenInputData = InputDataForBugEntities.updateValidInputData(getExistingBugId());
+        whenBugHandlerServiceBoundary.updateBug(givenInputData);
+        verify(getHandlerServicePresenterMock()).present(argThat(outputData -> {
+            assertEquals("SUCCESS", outputData.status);
+            return true;
+        }));
+    }
+
+    @Test
+    default void boundary_UpdateBug_GivenAllNullInputDataButLoadedBugHasValidData_ThenPresenterIsCalledOnceAndPassedOutputDataWithSuccessStatus() {
+        BugHandlerService whenBugHandlerServiceBoundary = createInstance();
+        InputData givenInputData = InputDataForBugEntities.updateInputDataWithAllNullValues(getExistingBugId());
+        whenBugHandlerServiceBoundary.updateBug(givenInputData);
+        verify(getHandlerServicePresenterMock()).present(argThat(outputData -> {
+            assertEquals("SUCCESS", outputData.status);
+            return true;
+        }));
+    }
+
+    @Test
+    default void boundary_UpdateBug_GivenAllEmptyInputDataButLoadedBugHasValidData_ThenPresenterIsCalledOnceAndPassedOutputDataWithFailedStatus() {
+        BugHandlerService whenBugHandlerServiceBoundary = createInstance();
+        InputData givenInputData = InputDataForBugEntities.updateInputDataWithAllEmptyValues(getExistingBugId());
+        whenBugHandlerServiceBoundary.updateBug(givenInputData);
+        verify(getHandlerServicePresenterMock()).present(argThat(outputData -> {
+            assertEquals("FAILED", outputData.status);
+            return true;
+        }));
     }
 }

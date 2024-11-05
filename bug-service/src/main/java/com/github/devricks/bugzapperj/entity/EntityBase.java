@@ -9,17 +9,26 @@ public abstract class EntityBase implements Entity, Validator {
 
     private static final IDGeneratorFactory IDGeneratorFactory = new DefaultIDGeneratorFactory();
     public static IDGenerator IDGenerator = IDGeneratorFactory.createIDGenerator();
-    private int id;
+    private Integer id = 0;
+    private Boolean persisted = false;
 
     public static void resetIDGenerator() {
         IDGenerator.reset();
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Boolean isPersisted() {
+        return persisted;
+    }
+
+    public void setPersisted(Boolean persisted) {
+        this.persisted = persisted;
     }
 }
